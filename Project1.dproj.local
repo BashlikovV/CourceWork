@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.359,D:\Программирование\Делфи\Algorithms.pas=D:\Программирование\Делфи\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.914,D:\BSUIR\ОАиП\Coursework\Project1.dproj=D:\Программирование\Делфи\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.275,=D:\Программирование\Делфи\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.365,D:\BSUIR\ОАиП\Coursework\Unit1.dfm=D:\Программирование\Делфи\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.365,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\Программирование\Делфи\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.657,D:\BSUIR\ОАиП\Coursework\Algorithms.pas=D:\Программирование\Делфи\Algorithms.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.200,=D:\Программирование\Делфи\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.717,=D:\Программирование\Делфи\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>
