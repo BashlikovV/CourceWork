@@ -1,13 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.359,D:\Программирование\Делфи\Algorithms.pas=D:\Программирование\Делфи\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.914,D:\BSUIR\ОАиП\Coursework\Project1.dproj=D:\Программирование\Делфи\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.346,D:\BSUIR\ОАиП\Coursework\GraphEdit.pas=D:\BSUIR\ОАиП\Coursework\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.638,D:\BSUIR\ОАиП\Coursework\Unit1.dfm=D:\BSUIR\ОАиП\Coursework\Window_AddVertice.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.880,D:\BSUIR\ОАиП\Coursework\Unit1.dfm=D:\BSUIR\ОАиП\Coursework\Window_mbRightClick.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.997,D:\BSUIR\ОАиП\Coursework\GraphEdit.pas=D:\BSUIR\ОАиП\Coursework\Graph_Edit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.914,D:\Программирование\Делфи\Project1.dproj=D:\BSUIR\ОАиП\Coursework\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.362,D:\BSUIR\ОАиП\Coursework\Unit_Main.dfm=D:\BSUIR\ОАиП\Coursework\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.257,D:\BSUIR\ОАиП\Coursework\Unit_Main.dfm=D:\BSUIR\ОАиП\Coursework\Window_Main.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.515,D:\BSUIR\ОАиП\Coursework\Unit1.dfm=D:\BSUIR\ОАиП\Coursework\Window_ArcInput.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.275,=D:\Программирование\Делфи\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.365,D:\BSUIR\ОАиП\Coursework\Unit1.dfm=D:\Программирование\Делфи\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.365,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\Программирование\Делфи\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.657,D:\BSUIR\ОАиП\Coursework\Algorithms.pas=D:\Программирование\Делфи\Algorithms.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.359,D:\Программирование\Делфи\Unit2.pas=D:\Программирование\Делфи\Algorithms.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.930,D:\BSUIR\ОАиП\Coursework\Window_mbRightClick.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.365,D:\Программирование\Делфи\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.851,D:\BSUIR\ОАиП\Coursework\Unit_Paint.pas=D:\BSUIR\ОАиП\Coursework\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.200,=D:\Программирование\Делфи\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.717,=D:\Программирование\Делфи\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.875,=D:\BSUIR\ОАиП\Coursework\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.880,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Window_mbRightClick.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.638,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Window_AddVertice.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.978,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Graph_Drawing.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.851,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Struct_Dynamic.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.365,D:\Программирование\Делфи\Unit1.dfm=D:\BSUIR\ОАиП\Coursework\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.257,D:\BSUIR\ОАиП\Coursework\Unit_Main.pas=D:\BSUIR\ОАиП\Coursework\Window_Main.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.362,D:\BSUIR\ОАиП\Coursework\Unit_Main.pas=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.934,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.515,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Window_ArcInput.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.657,D:\Программирование\Делфи\Algorithms.pas=D:\BSUIR\ОАиП\Coursework\Algorithms.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.796,=D:\BSUIR\ОАиП\Coursework\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.790,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.402,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.317,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.957,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>
