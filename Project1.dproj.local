@@ -24,13 +24,13 @@
     <Transaction>1899.12.30 00:00:00.000.365,D:\Программирование\Делфи\Unit1.dfm=D:\BSUIR\ОАиП\Coursework\Unit1.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.257,D:\BSUIR\ОАиП\Coursework\Unit_Main.pas=D:\BSUIR\ОАиП\Coursework\Window_Main.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.362,D:\BSUIR\ОАиП\Coursework\Unit_Main.pas=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.934,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.957,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.515,D:\BSUIR\ОАиП\Coursework\Unit1.pas=D:\BSUIR\ОАиП\Coursework\Window_ArcInput.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.657,D:\Программирование\Делфи\Algorithms.pas=D:\BSUIR\ОАиП\Coursework\Algorithms.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.796,=D:\BSUIR\ОАиП\Coursework\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.790,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.402,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.317,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.957,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.790,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.934,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.402,=D:\BSUIR\ОАиП\Coursework\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

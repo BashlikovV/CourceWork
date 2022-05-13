@@ -7,8 +7,8 @@ Uses System.Types, Vcl.Graphics, System.Math, Graph_Edit, Struct_Dynamic;
 procedure Vertce_MakeVisited(var AGraph: TGraph; var APatch: TStack);
 procedure Vertce_MakePassive(var AGraph: TGraph);
 procedure Vertce_MakeRegPolygon(var AGraph: TGraph; AWidth, AHeight: Integer);
-procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
-  const AGraph: TGraph);
+  procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
+    const AGraph: TGraph);
 
 implementation
 
