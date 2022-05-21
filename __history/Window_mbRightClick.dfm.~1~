@@ -1,0 +1,68 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Align = alClient
+  BorderStyle = bsNone
+  Caption = 'Form1'
+  ClientHeight = 270
+  ClientWidth = 250
+  Color = clBtnFace
+  Constraints.MaxHeight = 500
+  Constraints.MaxWidth = 250
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object btngrpMainBtnGroup: TButtonGroup
+    Left = 0
+    Top = 75
+    Width = 250
+    Height = 195
+    Align = alClient
+    Items = <
+      item
+      end>
+    TabOrder = 0
+    ExplicitLeft = 72
+    ExplicitTop = 88
+    ExplicitWidth = 100
+    ExplicitHeight = 100
+  end
+  object btnTopButton: TButton
+    Left = 0
+    Top = 0
+    Width = 250
+    Height = 25
+    Align = alTop
+    Caption = 'btnTopButton'
+    TabOrder = 1
+    ExplicitLeft = 72
+    ExplicitTop = 8
+    ExplicitWidth = 75
+  end
+  object btn1: TButton
+    Left = 0
+    Top = 50
+    Width = 250
+    Height = 25
+    Align = alTop
+    Caption = 'btnTopButton'
+    TabOrder = 2
+    ExplicitLeft = 8
+    ExplicitTop = 31
+  end
+  object btn2: TButton
+    Left = 0
+    Top = 25
+    Width = 250
+    Height = 25
+    Align = alTop
+    Caption = 'btnTopButton'
+    TabOrder = 3
+    ExplicitTop = 8
+  end
+end

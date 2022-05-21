@@ -2,7 +2,7 @@ unit Algorithms;
 
 interface
 
-uses Graph_Edit, Struct_Dynamic, System.SysUtils;
+uses Graph_Edit, Struct_Dynamic, System.SysUtils, Vcl.ComCtrls;
 
 type
   TWeightMatrix = array of array of Integer;
@@ -17,7 +17,7 @@ type
 
   function GraphStruct_ToMAtrix(const AGraph: TGraph):TWeightMatrix;
   function Graph_Dijkstra(const AGraph: TWeightMatrix;
-    Src, Dest: Integer): TInfo;
+    Src, Dest: Integer; AProgressBar: TProgressBar): TInfo;
 implementation
 
   const INF = 1000000000;
@@ -35,33 +35,33 @@ implementation
     //w - weight
 
   begin
-      with Result do
+    with Result do
+    begin
+      PatchString := '';
+      Stack_Initialize(Patch);
+      ArcsCount := 0;
+      Distans := 0;
+
+      if (AParents[Dest - 1] <> 0) or (Src = Dest) then
+      //ѕроверка существовани€ пути
       begin
-        PatchString := '';
-        Stack_Initialize(Patch);
-        ArcsCount := 0;
-        Distans := 0;
-
-        if (AParents[Dest - 1] <> 0) or (Src = Dest) then
-        //ѕроверка существовани€ пути
+        u := Dest;
+        while (u <> Src) do
         begin
-          u := Dest;
-          while (u <> Src) do
-          begin
-            v := AParents[u - 1];
+          v := AParents[u - 1];
 
-            Stack_Push(Patch, u);
-            PatchString := Splitter + IntToStr(u) + PatchString;
-            Inc(ArcsCount);
-            Distans := Distans + AGraph[v - 1,u - 1];
+          Stack_Push(Patch, u);
+          PatchString := Splitter + IntToStr(u) + PatchString;
+          Inc(ArcsCount);
+          Distans := Distans + AGraph[v - 1,u - 1];
 
-            u := v;
-          end;
-
-          Stack_Push(Patch, Src);
-          PatchString := IntToStr(u) + PatchString;
+          u := v;
         end;
+
+        Stack_Push(Patch, Src);
+        PatchString := IntToStr(u) + PatchString;
       end;
+    end;
   end;
 
   function GraphStruct_ToMAtrix(const AGraph: TGraph):TWeightMatrix;
@@ -103,7 +103,7 @@ implementation
   end;
 
   function Graph_Dijkstra(const AGraph: TWeightMatrix;
-    Src, Dest: Integer): TInfo;
+    Src, Dest: Integer; AProgressBar: TProgressBar): TInfo;
   var
     v, u: Integer;
     Order: Integer;
@@ -120,6 +120,10 @@ implementation
     //d - метка посещаемой вершины
 
   begin
+    AProgressBar.Min := 0;
+    AProgressBar.Max := SizeOF(AGraph);
+    AProgressBar.Step := Dest;
+
     Result.VisitsCount := 0;
 
     Order := Length(AGraph);
@@ -169,6 +173,7 @@ implementation
           Marks[u - 1] := d + AGraph[v - 1, u - 1];
         end;
       end;
+      AProgressBar.Position := d;
     until d = INF;
 
     Result := Graph_RestorePatch(AGraph, Parents, Src, Dest);

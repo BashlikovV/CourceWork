@@ -1,0 +1,14 @@
+﻿[pnlButtomPanel]
+Coordinates=10,10,105,58
+
+[btnCancel]
+Coordinates=125,10,72,80
+ExplicitSubNodes=Cancel
+
+[btnOk]
+Coordinates=120,110,49,80
+ExplicitSubNodes=Default
+
+[]
+Coordinates=10,78,87,58
+

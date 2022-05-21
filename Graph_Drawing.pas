@@ -7,13 +7,13 @@ Uses System.Types, Vcl.Graphics, System.Math, Graph_Edit, Struct_Dynamic;
 procedure Vertce_MakeVisited(var AGraph: TGraph; var APatch: TStack);
 procedure Vertce_MakePassive(var AGraph: TGraph);
 procedure Vertce_MakeRegPolygon(var AGraph: TGraph; AWidth, AHeight: Integer);
-  procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
-    const AGraph: TGraph);
+procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
+  const AGraph: TGraph; AColor: TColor = clBlack);
 
 implementation
 
 type
-  TArcLine = array[1..5] of TPoint;
+  TArcLine = array[1..5] of TPoint;    //1..2 - неор
 
 function Arc_GetPoints(p1, p2: Tpoint; R: Integer): TArcLine;
 const
@@ -33,10 +33,15 @@ begin
   XStart := Round(p1.X + R * (p2.X - p1.X) / d);
   YStart := Round(p1.Y + R * (p2.Y - p1.Y) / d);
 
+  { X, Y - начала ребра }
   Result[1].X := XStart;
   Result[1].Y := YStart;
+
+  { X, Y - конца ребра }
   Result[2].X := XEnd;
   Result[2].Y := YEnd;
+
+  // Result[2] - (X, Y - конца) - начало стрелки
   Result[4] := Result[2];
 
   d := Trunc(Result[1].Distance(Result[2]));
@@ -45,11 +50,14 @@ begin
   else
     LineAngle := 0;
 
-  Sign := 2 * Ord(XStart >= XEnd) - 1;
-  d := R div 2;
+  Sign := (2 * Ord(XStart >= XEnd) - 1);
+  d := (R div 2);
 
+  { ѕерва€ часть стрелки X, Y }
   Result[3].X := XEnd + Sign * Trunc(Cos(ArrowAngle - Sign * LineAngle) * d);
   Result[3].Y := YEnd - Sign * Trunc(Sin(ArrowAngle - Sign * LineAngle) * d);
+
+  { ¬тора€ часть стрелки X, Y }
   Result[5].X := XEnd + Sign * Trunc(Cos(ArrowAngle + Sign * LineAngle) * d);
   Result[5].Y := YEnd + Sign * Trunc(Sin(ArrowAngle + Sign * LineAngle) * d);
 end;
@@ -88,7 +96,7 @@ begin
       HText := TextHeight(SWeight);
       XMid := (Points[1].x + Points[2].x - WText) div 2;
       YMid := (Points[1].Y + Points[2].Y - HText) div 2;
-      Rectangle(XMid, YMid, XMid + WText + 1, YMid + HText + 1);
+      Rectangle(XMid - 1, YMid - 1, XMid + WText + 2, YMid + HText + 2);
       TextOut(XMid, YMid, SWeight);
     end;
     
@@ -96,7 +104,7 @@ begin
 end;  
 
 procedure Vertice_Draw(const ACanvas: TCanvas; R: Integer;
-  const AVertice: TPVertice);
+  const AVertice: TPVertice; AColor: TColor = clBlack);
 var
   SNumber: String;
   XMid, YMid: Integer;
@@ -107,8 +115,8 @@ begin
     case Style of
       stPassive:
         begin
-          Pen.Color := clBlack;
-          Font.Color := clBlack;
+          Pen.Color := AColor;  //clBlack
+          Font.Color := AColor; //clBlack
           Brush.Color := clWhite;
         end;
 
@@ -116,12 +124,12 @@ begin
         begin
           Pen.Color := clRed;
           Font.Color := clBlack;
-          Brush.Color := clCream;
+          Brush.Color := clMoneyGreen;
         end;
 
       stVisited:
         begin
-          Pen.Color := clTeal;
+          Pen.Color := clDkGray;
           Font.Color := clWhite;
           Brush.Color := clLime;
         end;
@@ -211,19 +219,20 @@ begin
 end;
 
 procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
-  const AGraph: TGraph);
+  const AGraph: TGraph; AColor: TColor = clBlack);
 var
   Vertice, AdjVertice, Active: TPVertice;
   Neighbour: TPNeighbour;
-  
+
 begin
+  Active := nil;
   with ACanvas do
   begin
     Pen.Color := clWhite;
     Rectangle(0, 0, Width, Height);
     Pen.Width := 3;
     Font.Size := 15;
-    Font.Style := [fsBold];
+    Font.Style := [TFontStyle.fsBold];
   end;
 
   Vertice := AGraph.Head;
@@ -243,11 +252,11 @@ begin
   Vertice := AGraph.Head;
   while (Vertice <> nil) do
   begin
-    Vertice_Draw(ACanvas, AGraph.R, Vertice);
+    Vertice_Draw(ACanvas, AGraph.R, Vertice, AColor);
 
     if (Vertice.Style = stActive) then Active := Vertice;
 
-    Vertice := Vertice.Next;    
+    Vertice := Vertice.Next;
   end;
 
   if (Active <> nil) then

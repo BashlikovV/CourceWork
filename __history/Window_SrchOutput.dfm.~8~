@@ -1,0 +1,41 @@
+object frmSrchOutput: TfrmSrchOutput
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'frmSrchOutput'
+  ClientHeight = 171
+  ClientWidth = 194
+  Color = clBtnFace
+  Constraints.MaxHeight = 250
+  Constraints.MaxWidth = 250
+  Constraints.MinHeight = 200
+  Constraints.MinWidth = 200
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlTopPanel: TPanel
+    Left = 0
+    Top = 0
+    Width = 194
+    Height = 171
+    Align = alClient
+    Caption = 'pnlTopPanel'
+    TabOrder = 0
+    object lblTopLabel: TLabel
+      Left = 1
+      Top = 1
+      Width = 192
+      Height = 169
+      Align = alClient
+      Caption = 'lblTopLabel'
+      ExplicitWidth = 53
+      ExplicitHeight = 13
+    end
+  end
+end

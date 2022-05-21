@@ -8,11 +8,11 @@ uses
 
 type
   TWindow_Input = class(TForm)
-    pnlTopPanel: TPanel;
-    lbledtWeight: TLabeledEdit;
     pnlButtomPanel: TPanel;
     btnOk: TButton;
     btnCancel: TButton;
+    pnlTopPanel: TPanel;
+    lbledtWeight: TLabeledEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnOkMouseDown(Sender: TObject; Button: TMouseButton;

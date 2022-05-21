@@ -3,7 +3,7 @@ unit Graph_Edit;
 interface
 
 uses System.Types, System.SysUtils, System.Math, System.Win.ComObj,
-  System.Variants, Winapi.ActiveX;
+  System.Variants, Winapi.ActiveX, Vcl.Graphics;
 
 type
   TVerticeStyle = (stPassive, stActive, stVisited);
@@ -26,7 +26,7 @@ type
     Next: TPVertice;
   end;
 
-  TGraph = record
+  TGraph = packed record
     Head: TPVertice;
     Tail: TPVertice;
     Order: Integer;
@@ -79,7 +79,7 @@ implementation
       Tail := nil;
       Order := 0;
       isPainted := False;
-      R := 40;
+      R := 35;
     end;
   end;
 
@@ -176,30 +176,39 @@ implementation
     Exists: Boolean;
 
   begin
-    if (v <> Graph.Head.Number) then
-    begin
-      PrevVertice := Graph_GetVertByNum(Graph, v - 1);
-      Exists := (PrevVertice <> nil) and (PrevVertice.Next <> nil);
-
-      if (Exists) then
+    try
+      if (v <> Graph.Head.Number) then
       begin
-        Vertice := PrevVertice.Next;
-        PrevVertice.Next := Vertice.Next;
+        PrevVertice := Graph_GetVertByNum(Graph, v - 1);
+        Exists := (PrevVertice <> nil) and (PrevVertice.Next <> nil);
+
+        if (Exists) then
+        begin
+          Vertice := PrevVertice.Next;
+          PrevVertice.Next := Vertice.Next;
+        end;
+      end
+      else
+      begin
+        Vertice := Graph.Head;
+        Graph.Head := Vertice.Next;
+        Exists := True;
       end;
-    end
-    else
-    begin
-      Vertice := Graph.Head;
-      Graph.Head := Vertice.Next;
-      Exists := True;
+    except
+      raise Exception.Create('Error. Graph deleted');
+      Graph_Delete(Graph);
     end;
 
     if (Exists) then
     begin
       Dec(Graph.Order);
 
-      AdjList_Destroy(Vertice.Head);
-      Dispose(Vertice);
+      try
+        AdjList_Destroy(Vertice.Head);
+        Dispose(Vertice);
+      except
+        raise Exception.Create('Vertice not found');
+      end;
 
       Vertice := Graph.Head;
       while (Vertice <> nil) do
@@ -219,7 +228,12 @@ implementation
               Vertice.Head := Neighbour.Next
             else
               PrevNeighbour.Next := Neighbour.Next;
-            Dispose(Neighbour);
+            try
+              Dispose(Neighbour);
+              Neighbour := nil; //nil?
+            except
+              raise Exception.Create('Neighbour error');
+            end;
           end
           else if (Neighbour.Number > v) then
             Dec(Neighbour.Number);
@@ -254,8 +268,12 @@ implementation
             Vertice.Head := Neighbour.Next
           else
             PrevNeighbour.Next := Neighbour.Next;
-          Dispose(Neighbour);
-          Neighbour := nil;
+          try
+            Dispose(Neighbour);
+            Neighbour := nil;
+          except
+            raise Exception.Create('Neighbour error');
+          end;
         end
         else
         begin
@@ -296,15 +314,19 @@ implementation
     Flag: Boolean;
 
   begin
-    Result := nil;
-    Flag := False;
-    Vertice := AGraph.Head;
-    while (Vertice <> nil) do
-    begin
-      if (Flag) then Vertice := Vertice.Next;
-      Flag := True;
-      Result := Vertice;
-      if (Vertice.Next = nil) then Exit;
+    try
+      Result := nil;
+      Flag := False;
+      Vertice := AGraph.Head;
+      while (Vertice <> nil) do
+      begin
+        if (Flag) then Vertice := Vertice.Next;
+        Flag := True;
+        Result := Vertice;
+        if (Vertice.Next = nil) then Exit;
+      end;
+    except
+      raise Exception.Create('Last vertice isn`t get.');
     end;
   end;
 
@@ -313,18 +335,22 @@ implementation
     Item: TVertStack;
 
   begin
-    New(Item);
-    New(Item.Vertice);
+    try
+      New(Item);
+      New(Item.Vertice);
 
-    Item.Vertice.Number := AVertice.Number;
-    Item.Vertice.Center := AVertice.Center;
-    Item.Vertice.Style := stActive;
-    Item.Vertice.OutDeg := AVertice.OutDeg;
-    Item.Vertice.Head := AVertice.Head;
-    Item.Vertice.Next := AVertice.Next;
+      Item.Vertice.Number := AVertice.Number;
+      Item.Vertice.Center := AVertice.Center;
+      Item.Vertice.Style := stActive;
+      Item.Vertice.OutDeg := AVertice.OutDeg;
+      Item.Vertice.Head := AVertice.Head;
+      Item.Vertice.Next := AVertice.Next;
 
-    Item.Next := AVertStack;
-    AVertStack := Item;
+      Item.Next := AVertStack;
+      AVertStack := Item;
+    except
+      raise Exception.Create('Vertice not found');
+    end;
   end;
 
   function VerticeStack_Pop(var AVertStack: TVertStack): TPvertice;
@@ -342,13 +368,79 @@ implementation
   end;
 
   procedure Graph_Open(var Graph: TGraph; VerFileName, ArcFileName: String);
+  var
+    VerFile: file of TVertice;
+    ArcFile: file of TNeighbour;
+    Vertice: TPVertice;
+    Neighbour: TPNeighbour;
+    v: Integer;
+
   begin
-    //...
+    try
+      Assign(VerFile, VerFileName);
+      Assign(ArcFile, ArcFileName);
+      Reset(VerFile);
+      Reset(ArcFile);
+    except
+      raise Exception.Create('File not found. Try again');
+    end;
+
+    Graph_Create(Graph);
+    New(Vertice);
+    New(Neighbour);
+
+    while (not Eof(VerFile)) do
+    begin
+      read(VerFile, Vertice^);
+      Graph_AddVertice(Graph, Vertice.Center);
+
+      for v := 1 to Vertice.OutDeg do
+      begin
+        read(ArcFile, Neighbour^);
+        Graph_AddEdge(Graph, Vertice.Number, Neighbour.Number, Neighbour.Weight);
+      end;
+    end;
+
+    Dispose(Vertice);
+    Dispose(Neighbour);
+
+    CloseFile(VerFile);
+    CloseFile(ArcFile);
   end;
 
   procedure Graph_Save(const Graph: TGraph; VerFileName, ArcFileName: String);
+  var
+    VerFile: file of TVertice;
+    ArcFile: file of TNeighbour;
+    Vertice: TPVertice;
+    Neighbour: TPNeighbour;
+
   begin
-    //...
+    try
+      Assign(VerFile, VerFileName);
+      Assign(ArcFile, ArcFileName);
+      Rewrite(VerFile);
+      Rewrite(ArcFile);
+    except
+      raise Exception.Create('Saving arror. Try again');
+    end;
+
+    Vertice := Graph.Head;
+    while (Vertice <> nil) do
+    begin
+      write(VerFile, Vertice^);
+
+      Neighbour := Vertice.Head;
+      while (Neighbour <> nil) do
+      begin
+        write(ArcFile, Neighbour^);
+        Neighbour := Neighbour.Next;
+      end;
+      Vertice := Vertice.Next;
+    end;
+
+    CloseFile(VerFile);
+    CloseFile(ArcFile);
   end;
 
   procedure Graph_ExcelImport(var Graph: TGraph; ExeclFileName: String);
