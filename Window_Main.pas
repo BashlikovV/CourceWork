@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ActnMan, Vcl.ActnCtrls, System.Actions, Vcl.ActnList, System.ImageList,
   Vcl.ImgList, Vcl.ExtCtrls, Graph_Edit, Graph_Drawing, Window_ArcInput,
-  Vcl.StdCtrls, Vcl.Buttons, Algorithms, Window_SrchOutput, Vcl.WinXCtrls;
+  Vcl.StdCtrls, Vcl.Buttons, Algorithms, Window_SrchOutput, Vcl.WinXCtrls,
+  Vcl.ActnColorMaps;
 
 type
   TCanvasState = (stAddVertice, stAddArc, stDeleteVertice, stDeleteArc, stMove,
@@ -33,22 +34,14 @@ type
     actInHeight: TAction;
     MainMenu: TMainMenu;
     mniFile: TMenuItem;
-    mniNew: TMenuItem;
     mniOpen: TMenuItem;
     mniSaveAll: TMenuItem;
-    mniSaveAs: TMenuItem;
     mniExit: TMenuItem;
     actSave1: TMenuItem;
     mniN1: TMenuItem;
-    mniExit1: TMenuItem;
     mniEdit: TMenuItem;
     mniUndo: TMenuItem;
     mniRedo: TMenuItem;
-    mniN2: TMenuItem;
-    N1: TMenuItem;
-    mniCut: TMenuItem;
-    mniCopy: TMenuItem;
-    mniDelete: TMenuItem;
     mniRun: TMenuItem;
     mniRun1: TMenuItem;
     mniStepOver: TMenuItem;
@@ -61,7 +54,6 @@ type
     btnSave: TToolButton;
     btnRun: TToolButton;
     btnStepOver: TToolButton;
-    btnNew: TToolButton;
     btnsp1: TToolButton;
     dlgOpen: TOpenDialog;
     mainImageList: TImageList;
@@ -94,7 +86,14 @@ type
     btnClear: TToolButton;
     tglswtch1: TToggleSwitch;
     btn1: TToolButton;
-    procedure actNewExecute(Sender: TObject);
+    actAbout: TAction;
+    About1: TMenuItem;
+    actExport: TAction;
+    actExport1: TMenuItem;
+    N1: TMenuItem;
+    actExit1: TMenuItem;
+    btn2: TToolButton;
+    clrbxColorBox: TColorBox;
     procedure actExitExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure pbCanvasClick(Sender: TObject);
@@ -105,8 +104,6 @@ type
     procedure pbCanvasMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure pbCanvasPaint(Sender: TObject);
-    procedure chkTopBoxClick(Sender: TObject);
-    procedure btnSpeedButtonClick(Sender: TObject);
     procedure btnAddEdgeClick(Sender: TObject);
     procedure btnDeleteVertexClick(Sender: TObject);
     procedure btnDeleteEdgeClick(Sender: TObject);
@@ -120,6 +117,9 @@ type
     procedure actOpenExecute(Sender: TObject);
     procedure actSaveExecute(Sender: TObject);
     procedure tglswtch1Click(Sender: TObject);
+    procedure actAboutExecute(Sender: TObject);
+    procedure actExportExecute(Sender: TObject);
+    procedure clrbxColorBoxChange(Sender: TObject);
   private
     { Private declarations }
     FGraph: TGraph;
@@ -127,6 +127,7 @@ type
     FState: TCanvasState;
     FActiveVertice: TPVertice;
     FVertStack: TVertStack;
+    FColor: TColor;
   public
     { Public declarations }
   end;
@@ -138,51 +139,100 @@ implementation
 
 {$R *.dfm}
 
-procedure TMainForm.actClearExecute(Sender: TObject);
+procedure TMainForm.actAboutExecute(Sender: TObject);
 begin
-  FGraph.Order := 0;
+  //...About
+end;
+
+procedure TMainForm.actClearExecute(Sender: TObject);
+{ Cleans the canvas }
+begin
   Graph_Delete(FGraph);
-  pbCanvasPaint(Sender);
+  Graph_Create(FGraph);
+  pbCanvas.Invalidate;
 end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
+{ Shuts down the application }
 begin
-  ShowMessage('Exit');
+  if (MessageBox(MainForm.Handle, 'Do you want to close the program?', '',
+    MB_OKCANCEL)) = 1 then
+    MainForm.Close;
+
   Graph_Delete(FGraph);
 end;
 
-procedure TMainForm.actNewExecute(Sender: TObject);
+procedure TMainForm.actExportExecute(Sender: TObject);
+{ Export graph in PNG }
+var
+  BitMap: TBitMap;
+
 begin
-  //...
+  if (dlgSave.Execute()) then
+  begin
+    BitMap := TBitmap.Create;
+    try
+      BitMap.SetSize(pbCanvas.Width,pbCanvas.Height);
+      Graph_Redraw(BitMap.Canvas, BitMap.Width, BitMap.Height, FGraph);
+      BitMap.SaveToFile(ExtractFileName(dlgSave.FileName));
+    finally
+      BitMap.Free;
+    end;
+  end;
 end;
 
 procedure TMainForm.actOpenExecute(Sender: TObject);
+{ opens typed files with graph structure }
 var
   VerFileName, ArcFileName: string;
+  NewGraph: TGraph;
+  //VerFileName -- Vertex file name
+  //ArcFileName -- Edge file name
+  //NewGraph -- new variable
 
 begin
+  //Choosing the vertice file
   MessageBox(MainForm.Handle, 'Выберите файл вершин (*.ver)', 'VerFileName', MB_OK);
   dlgOpen.Execute();
   VerFileName := ExtractFileName(dlgOpen.FileName);
 
+  //Choosing the arc file
   MessageBox(MainForm.Handle, 'Выберите файл ребер (*.arc)', 'ArcFileName', MB_OK);
   dlgOpen.Execute();
   ArcFileName := ExtractFileName(dlgOpen.FileName);
 
-  Graph_Open(FGraph, VerFileName, ArcFileName);
+  try
+    Graph_Open(NewGraph, VerFileName, ArcFileName);
+  finally
+    btnRun.Enabled := True;
+    btnAddVertex.Enabled := True;
+    btnClear.Enabled := True;
+    btnAddEdge.Enabled := True;
+  end;
 
-  pbCanvasPaint(Sender);
+  Graph_Delete(FGraph);
+  FGraph := NewGraph;
+  FActiveVertice := nil;
+  pbCanvas.Invalidate;
+
+
+  //Redraw opened graph
+  pbCanvasPaint(Sender);  //...?
 end;
 
 procedure TMainForm.actRedoExecute(Sender: TObject);
+{ Ctrl + Shift + Z }
 begin
   FState := stRedo;
-  pbCanvasClick(Sender);
+  pbCanvasClick(Sender);  //...?
 end;
 
 procedure TMainForm.actSaveExecute(Sender: TObject);
+{ Saves graph structure in typed files }
 var
   VerFileName, ArcFileName: string;
+  //VerFileName -- Vertex file name
+  //ArcFileName -- Edge file name
 
 begin
   dlgSave.Execute();
@@ -192,12 +242,14 @@ begin
 end;
 
 procedure TMainForm.actUndoExecute(Sender: TObject);
+{ Ctrl + Z }
 begin
   FState := stUndo;
-  pbCanvasClick(Sender);
+  pbCanvasClick(Sender);  //...?
 end;
 
 procedure TMainForm.btnAddEdgeClick(Sender: TObject);
+{ Adding an edge to a graph }
 begin
   FState := stAddArc;
   btnDeleteEdge.Enabled := True;
@@ -205,6 +257,7 @@ begin
 end;
 
 procedure TMainForm.btnAddVertexClick(Sender: TObject);
+{ Adding a vertex to a graph }
 begin
   FState := stAddVertice;
   btnAddEdge.Enabled := True;
@@ -212,60 +265,51 @@ begin
 end;
 
 procedure TMainForm.btnDeleteEdgeClick(Sender: TObject);
+{ Removing an edge from a graph }
 begin
   FState := stDeleteArc;
 end;
 
 procedure TMainForm.btnDeleteVertexClick(Sender: TObject);
+{ Removing a vertex from a graph }
 begin
   FState := stDeleteVertice;
 end;
 
 procedure TMainForm.btnRunClick(Sender: TObject);
+{ Launching changed algorithm }
 begin
   FState := stDijkstra;
-  pbCanvasClick(Sender);
 end;
 
-procedure TMainForm.btnSpeedButtonClick(Sender: TObject);
+procedure TMainForm.clrbxColorBoxChange(Sender: TObject);
+{ changing the vertex color }
 begin
-  if (FGraph.isPainted) then
-  begin
-    Vertce_MakePassive(FGraph);
-    pbCanvas.Invalidate;
-  end
-  else if (FActiveVertice <> nil) then
-  begin
-    FActiveVertice.Style := stPassive;
-    FActiveVertice := nil;
-    pbCanvas.Invalidate;
-  end;
-  if (Sender as TSpeedButton).Down then
-    FState := TCanvasState((Sender as TSpeedButton).Tag)
-  else
-    FState := stNone;
-end;
-
-procedure TMainForm.chkTopBoxClick(Sender: TObject);
-begin
-  Window_Input.Weight := 1;
+  FColor := clrbxColorBox.Selected;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
+{ Actions when creating a form }
 begin
   FState := stNone;
   Graph_Create(FGraph);
   FActiveVertice := nil;
+  About1.Enabled := True;
 
+  { Setting the switch values }
   tglswtch1.StateCaptions.CaptionOff := 'Невзв';
   tglswtch1.StateCaptions.CaptionOn := 'Взв';
 end;
 
 procedure TMainForm.pbCanvasClick(Sender: TObject);
+{ Handler for right-clicking on the canvas }
 var
   Pos: TPoint;
   SelectedVertice: TPVertice;
   Window_MInput: TModalResult;
+  //Pos -- Cursor position (X, Y) during click
+  //SelectedVertice -- Pointer to the selected vertex
+  //Window_MInput -- Edge length input window
 
 begin
   if (FGraph.isPainted) then
@@ -274,12 +318,15 @@ begin
   end;
 
   Pos := ScreenToClient(Mouse.CursorPos);
+  //Getting (X, Y) of clicks
 
   case FState of
     stAddVErtice:
       Graph_AddVertice(FGraph, Pos);
+      //Adding a vertex
 
     stDeleteVertice:
+    { Deleting a vertex }
       begin
         SelectedVertice := Graph_GetVertByPoint(FGraph, Pos);
         if (SelectedVertice <> nil) then
@@ -290,6 +337,7 @@ begin
       end;
 
     stUndo:
+    { Ctrl + Z }
       begin
         SelectedVertice := Graph_GetLastVert(FGraph);
         if (SelectedVertice <> nil) then
@@ -300,6 +348,7 @@ begin
       end;
 
     stRedo:
+    { Ctrl + Chift + Z }
       begin
         if (FVertStack <> nil) then
         begin
@@ -309,6 +358,7 @@ begin
       end;
 
     stAddArc, stDeleteArc, stDFS, stBFS, stDijkstra:
+    { Adding or removing edges and algorithms }
       begin
         SelectedVertice := Graph_GetVertByPoint(FGraph, Pos);
         if (SelectedVertice <> nil) and (FActiveVertice = nil) then
@@ -322,13 +372,16 @@ begin
 
         case FState of
           stAddArc:
+          { Adding adge }
             begin
               if (FGraphType) then
+              { Weighted graph }
               begin
                 Window_MInput := Window_Input.ShowModal;
                 Window_MInput := mrOk;
               end
               else
+              { unweighted graph. Weights of edges := 1 }
               begin
                 Window_Input.Weight := 1;
                 Window_MInput := mrOk;
@@ -337,15 +390,18 @@ begin
               if (Window_MInput = mrOk) then
                 Graph_AddEdge(FGraph, FActiveVertice.Number,
                   SelectedVertice.Number, Window_Input.Weight);
+              //Adding edge
             end;
 
           stDeleteArc:
+          { Deleting edge }
             begin
               Graph_DeleteEdge(FGraph, FActiveVertice.Number,
                 SelectedVertice.Number);
             end;
 
-          stDijkstra:
+          stDijkstra, stDFS, stBFS:
+          { Algorithms }
             begin
               Search_Start(FState, FActiveVertice.Number, SelectedVertice.Number);
             end;
@@ -359,20 +415,27 @@ begin
 
   if (FState = stNone) then
     pbCanvas.Invalidate;
+  //Clearing the canvas for redrawing
 
   pbCanvasPaint(Self);
+  //Redrawing the canvas
+  
   FState := stNone;
+  //Returning the canvas state to the passive value
 end;
 
 procedure TMainForm.pbCanvasDblClick(Sender: TObject);
+{ Double Click -- The beginning of the movement of the object }
 begin
   FState := stMove;
 end;
 
 procedure TMainForm.pbCanvasMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+{ Handler for the button click event }
 var
   Pos: TPoint;
+  //Pos -- Cursor position (X, Y) during click
 
 begin
   if (FState = stMove) then
@@ -387,8 +450,10 @@ end;
 
 procedure TMainForm.pbCanvasMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
+{ Handler for the mouse dragging event with the button pressed }
 var
   Pos: TPoint;
+  //Pos -- Cursor position (X, Y) during click
 
 begin
   if (FState = stMove) and (FActiveVertice <> nil) then
@@ -397,11 +462,11 @@ begin
     FActiveVertice.Center := Pos;
     pbCanvas.Invalidate;
   end;
-
 end;
 
 procedure TMainForm.pbCanvasMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+{ Handler for releasing the mouse button during dragging }
 begin
   if (FState = stMove) then
   begin
@@ -412,31 +477,35 @@ begin
 end;
 
 procedure TMainForm.pbCanvasPaint(Sender: TObject);
-var
-  i: Integer;
+{ Canvas Drawing Handler }
 begin
   try
-    Graph_Redraw(pbCanvas.Canvas, pbCanvas.Width, pbCanvas.Height, FGraph)
+    Graph_Redraw(pbCanvas.Canvas, pbCanvas.Width, pbCanvas.Height, FGraph, FColor)
   except
     Graph_Delete(FGraph);
     Graph_Create(FGraph);
-    ShowMessage('Error. Graph deleted');
+    ShowMessage('Redraw error. Graph deleted');
   end;
 end;
 
 procedure TMainForm.Search_Start(AState: TCanvasState; v, u: Integer);
+{ The method that calls the search algorithms }
 var
   Weights: TWeightMatrix;
   AInfo: TInfo;
   fmShowResult: TfrmSrchOutput;
+  //Weights -- The matrix of weights
+  //AInfo -- Type of information about the completed path
+  //fmShowRedult -- The form of output of the results of algorithms execution
 
 begin
   Weights := GraphStruct_ToMAtrix(FGraph);
 
   case AState of
     stDijkstra:
-      AInfo := Graph_Dijkstra(Weights, v, u);
-
+    begin
+      AInfo := Graph_Dijkstra(Weights, v, u, pbProgressBar);
+    end;
     //stDFS:
       //...
 
@@ -448,6 +517,7 @@ begin
   begin
     Vertce_MakeVisited(FGraph, AInfo.Patch);
     frmSrchOutput.Info := AInfo;
+    frmSrchOutput.FormShow(pbCanvas, pbProgressBar);
     frmSrchOutput.Show;
   end
   else
@@ -455,6 +525,7 @@ begin
 end;
 
 procedure TMainForm.tglswtch1Click(Sender: TObject);
+{ Switching graph type (Directional Weighted / Directional Unweighted) }
 begin
   if (tglswtch1.State = tssOff) then
     FGraphType := False

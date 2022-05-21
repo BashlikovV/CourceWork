@@ -1,0 +1,16 @@
+program Project1;
+
+uses
+  Vcl.Forms,
+  Unit_Main in 'Unit_Main.pas' {MainForm},
+  Algorithms in 'Algorithms.pas',
+  GraphEdit in 'GraphEdit.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TMainForm, MainForm);
+  Application.Run;
+end.
