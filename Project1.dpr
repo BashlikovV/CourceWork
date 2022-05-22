@@ -8,7 +8,8 @@ uses
   Graph_Drawing in 'Graph_Drawing.pas',
   Struct_Dynamic in 'Struct_Dynamic.pas',
   Window_ArcInput in 'Window_ArcInput.pas' {Window_Input},
-  Window_SrchOutput in 'Window_SrchOutput.pas' {frmSrchOutput};
+  Window_SrchOutput in 'Window_SrchOutput.pas' {frmSrchOutput},
+  Window_About in 'Window_About.pas' {frmAbout};
 
 {$R *.res}
 
@@ -18,5 +19,6 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TWindow_Input, Window_Input);
   Application.CreateForm(TfrmSrchOutput, frmSrchOutput);
+  Application.CreateForm(TfrmAbout, frmAbout);
   Application.Run;
 end.

@@ -8,7 +8,7 @@ procedure Vertce_MakeVisited(var AGraph: TGraph; var APatch: TStack);
 procedure Vertce_MakePassive(var AGraph: TGraph);
 procedure Vertce_MakeRegPolygon(var AGraph: TGraph; AWidth, AHeight: Integer);
 procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
-  const AGraph: TGraph; AColor: TColor = clBlack);
+  const AGraph: TGraph);
 
 implementation
 
@@ -104,7 +104,7 @@ begin
 end;  
 
 procedure Vertice_Draw(const ACanvas: TCanvas; R: Integer;
-  const AVertice: TPVertice; AColor: TColor = clBlack);
+  const AVertice: TPVertice);
 var
   SNumber: String;
   XMid, YMid: Integer;
@@ -115,8 +115,8 @@ begin
     case Style of
       stPassive:
         begin
-          Pen.Color := AColor;  //clBlack
-          Font.Color := AColor; //clBlack
+          Pen.Color := clBlack;
+          Font.Color := clBlack;
           Brush.Color := clWhite;
         end;
 
@@ -219,7 +219,7 @@ begin
 end;
 
 procedure Graph_Redraw(const ACanvas: TCanvas; Width, Height: Integer;
-  const AGraph: TGraph; AColor: TColor = clBlack);
+  const AGraph: TGraph);
 var
   Vertice, AdjVertice, Active: TPVertice;
   Neighbour: TPNeighbour;
@@ -252,7 +252,7 @@ begin
   Vertice := AGraph.Head;
   while (Vertice <> nil) do
   begin
-    Vertice_Draw(ACanvas, AGraph.R, Vertice, AColor);
+    Vertice_Draw(ACanvas, AGraph.R, Vertice);
 
     if (Vertice.Style = stActive) then Active := Vertice;
 

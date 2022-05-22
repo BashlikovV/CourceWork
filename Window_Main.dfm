@@ -61,7 +61,6 @@ object MainForm: TMainForm
     Images = mainImageList
     ParentDoubleBuffered = False
     TabOrder = 0
-    ExplicitWidth = 709
     object btnOpen: TToolButton
       Left = 0
       Top = 0
@@ -87,6 +86,7 @@ object MainForm: TMainForm
       Left = 111
       Top = 0
       Action = actStepOver
+      OnClick = btnStepOverClick
     end
     object btnSave: TToolButton
       Left = 159
@@ -182,15 +182,6 @@ object MainForm: TMainForm
       ImageIndex = 1
       Style = tbsSeparator
     end
-    object clrbxColorBox: TColorBox
-      Left = 559
-      Top = 0
-      Width = 145
-      Height = 22
-      AutoDropDown = True
-      TabOrder = 1
-      OnChange = clrbxColorBoxChange
-    end
   end
   object pnlProgressPanel: TPanel
     Left = 0
@@ -205,8 +196,6 @@ object MainForm: TMainForm
     Caption = 'pnlProgressPanel'
     DragMode = dmAutomatic
     TabOrder = 1
-    ExplicitTop = 376
-    ExplicitWidth = 709
     object pbProgressBar: TProgressBar
       Left = 1
       Top = 1
@@ -215,7 +204,6 @@ object MainForm: TMainForm
       Cursor = crNo
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 705
     end
   end
   object ActionList: TActionList
@@ -304,14 +292,17 @@ object MainForm: TMainForm
     object actDijkstra: TAction
       Category = 'Algorithms'
       Caption = 'actDijkstra'
+      OnExecute = actDijkstraExecute
     end
     object actInWidth: TAction
       Category = 'Algorithms'
       Caption = 'actInWidth'
+      OnExecute = actInWidthExecute
     end
     object actInHeight: TAction
       Category = 'Algorithms'
       Caption = 'actInHeight'
+      OnExecute = actInHeightExecute
     end
     object actAddVertex: TAction
       Category = 'Component'
