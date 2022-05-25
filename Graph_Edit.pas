@@ -296,15 +296,19 @@ implementation
     Vertice: TPVertice;
 
   begin
-    Result := nil;
-    Vertice := Graph.Head;
-    while (Vertice <> nil) do
-    begin
-      if P.Distance(Vertice.Center) <= Graph.R then
+    try
+      Result := nil;
+      Vertice := Graph.Head;
+      while (Vertice <> nil) do
       begin
-        Result := Vertice;
+        if P.Distance(Vertice.Center) <= Graph.R then
+        begin
+          Result := Vertice;
+        end;
+        Vertice := Vertice.Next;
       end;
-      Vertice := Vertice.Next;
+    except
+      raise Exception.Create('Vertice not found');
     end;
   end;
 

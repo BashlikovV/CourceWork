@@ -1,12 +1,14 @@
-unit Algorithms;
+﻿unit Algorithms;
 
 interface
 
 uses Graph_Edit, Struct_Dynamic, System.SysUtils, Vcl.ComCtrls;
 
 type
+  //Матрица весов графа
   TWeightMatrix = array of array of Integer;
 
+  //Тип информации о результатах поиска
   TInfo = record
     Patch: TStack;
     PatchString: string;
@@ -15,9 +17,20 @@ type
     VisitsCount: Integer;
   end;
 
+  //Функция перевода графа-структуры в граф-матрицу весов
   function GraphStruct_ToMAtrix(const AGraph: TGraph):TWeightMatrix;
+
+  //Поиск пути из Src в Des алгоритмом Дейкстры
   function Graph_Dijkstra(const AGraph: TWeightMatrix;
     Src, Dest: Integer; AProgressBar: TProgressBar): TInfo;
+
+  //Поиск пути из Src в Des обходом вглубину
+  function Graph_DFS(const AGraph: TWeightMatrix; Src, Dest: Integer;
+    AProgressBar: TProgressBar): TInfo;
+
+  //Поиск пути из Src в Des обходом ширину
+  function Graph_BFS(const AGraph: TWeightMatrix; Src, Dest: Integer;
+    AProgressBar: TProgressBar): TInfo;
 implementation
 
   const INF = 1000000000;
@@ -26,12 +39,12 @@ implementation
     const AParents: array of Integer; Src, Dest: Integer):TInfo;
   const
     Splitter = ', ';
-    //Splitter - ����������� ����� ��������� � ������ ����
+    //Splitter - разделитель между вершинами в строке пути
 
   var
     v, u, w: Integer;
-    //v - ����� ������-������ ����
-    //u - ����� �������-����� ����
+    //v - номер вешины-начала дуги
+    //u - номер вершины-конца дуги
     //w - weight
 
   begin
@@ -43,7 +56,7 @@ implementation
       Distans := 0;
 
       if (AParents[Dest - 1] <> 0) or (Src = Dest) then
-      //�������� ������������� ����
+      //Проверка существования пути
       begin
         u := Dest;
         while (u <> Src) do
@@ -69,10 +82,10 @@ implementation
     Vertice: TPVertice;
     Neighbour: TPNeighbour;
     v, u: Integer;
-    //Vertice - ������ �� ������� �������
-    //Neighbour - ������ �� �������� ������
-    //v - �������� ����� �� ��������
-    //u - �������� ����� �� �������
+    //Vertice - ссылка на текущую вершину
+    //Neighbour - ссылка на текущего соседа
+    //v - параметр уикла по вершинам
+    //u - параметр цикла по соседям
 
   begin
     SetLength(Result, AGraph.Order, AGraph.Order);
@@ -111,13 +124,13 @@ implementation
     isVisited: array of Boolean;
     Parents: array of Integer;
     d: Integer;
-    //v - ����� ���������� �������
-    //u - ����� ������ �������
-    //Order - ������� �����
-    //Marks - ������ �����
-    //isVisited - ������ ������
-    //Parents - ������ �������
-    //d - ����� ���������� �������
+    //v - Номер посещаемой вершины
+    //u - Номер соседа вершины
+    //Order - Порядок графа
+    //Marks - Массив метое
+    //isVisited - массив флагов
+    //Parents - массив предков
+    //d - метка посещаемой вершины
 
   begin
     AProgressBar.Min := 0;
@@ -179,4 +192,137 @@ implementation
     Result := Graph_RestorePatch(AGraph, Parents, Src, Dest);
   end;
 
+  function Graph_DFS(const AGraph: TWeightMatrix; Src, Dest: Integer;
+    AProgressBar: TProgressBar): TInfo;
+  var
+    v, u: Integer;
+    Order: Integer;
+    VertStack: TStack;
+    isVisited: array of Boolean;
+    Parents: array of Integer;
+    //v - Номер посещаемой вершины
+    //u - Номер соседа вершины
+    //Order - Порядок графа
+    //VertStack - Стек вершин
+    //Marks - Массив метое
+    //isVisited - массив флагов
+    //Parents - массив предков
+
+  begin
+    AProgressBar.Min := 0;
+    AProgressBar.Max := SizeOF(AGraph);
+    AProgressBar.Step := Dest;
+
+    Result.VisitsCount := 0;
+
+    //Help-data initialization
+    Order := Length(AGraph);
+    Stack_Initialize(VertStack);
+    SetLength(isVisited, Order);
+    SetLength(Parents, Order);
+
+    for v := 1 to Order do
+    begin
+      Parents[v - 1] := 0;
+      isVisited[v - 1] :=  False;
+    end;
+
+    //Cycle A1. Vertices --> VertStack
+    Stack_Push(VertStack, Src);
+    while (VertStack <> nil) do
+    begin
+      //Getting a vertex and comparing it with the final one
+      v := Stack_Pop(VertStack);
+      Inc(Result.VisitsCount);
+      if (v = Dest) then
+      begin
+        List_Destroy(VertStack);
+        isVisited[v - 1] := True;
+      end;
+
+      if (not isVisited[v - 1]) then
+      begin
+        isVisited[v - 1] := True;
+      end;
+
+      //Cycle B1. Adding visited neighbors to the stack
+      for u := Order downto 1 do
+      begin
+        if (not isVisited[u - 1]) and (AGraph[v - 1, u - 1] <> INF) then
+        begin
+          Parents[u - 1] := v;
+          //Saving the way
+
+          Stack_Push(VertStack, u);
+        end;
+      end;  //End of the cycle B1
+      AProgressBar.Position := Result.VisitsCount;
+
+    end;  //End of the cycle A1
+
+    Result := Graph_RestorePatch(AGraph, Parents, Src, Dest);
+  end;
+
+  function Graph_BFS(const AGraph: TWeightMatrix; Src, Dest: Integer;
+    AProgressBar: TProgressBar): TInfo;
+  var
+    v, u: Integer;
+    Order: Integer;
+    VertQueue: TQueue;
+    isVisited: array of Boolean;
+    Parents: array of Integer;
+    //v - Номер посещаемой вершины
+    //u - Номер соседа вершины
+    //Order - Порядок графа
+    //VertStack - Стек вершин
+    //Marks - Массив метое
+    //isVisited - массив флагов
+    //Parents - массив предков
+
+  begin
+    AProgressBar.Min := 0;
+    AProgressBar.Max := SizeOF(AGraph);
+    AProgressBar.Step := Dest;
+
+    Result.VisitsCount := 0;
+
+    Order := Length(AGraph);
+
+    Queue_Initialize(VertQueue);
+    SetLength(isVisited, Order);
+    SetLength(Parents, Order);
+
+    for v := 1 to Order do
+    begin
+      Parents[v - 1] := 0;
+      isVisited[v - 1] :=  False;
+    end;
+
+    Queue_Add(VertQueue, Src);
+    isVisited[Src - 1] := True;
+    while (VertQueue.Head <> nil) do
+    begin
+      v := Queue_Extract(VertQueue);
+      Inc(Result.VisitsCount);
+      if (v = Dest) then
+      begin
+        List_Destroy(VertQueue.Head);
+        Order := 0;
+      end;
+
+      for u := 1 to Order do
+      begin
+        if (not isVisited[u - 1]) and (AGraph[v - 1, u - 1] <> INF) then
+        begin
+          isVisited[u - 1] := True;
+          Parents[u - 1] := v;
+          Queue_Add(VertQueue, u);
+        end;
+      end;
+      AProgressBar.Position := Result.VisitsCount;
+    end;
+    Result := Graph_RestorePatch(AGraph, Parents, Src, Dest);
+  end;
+
 end.
+
