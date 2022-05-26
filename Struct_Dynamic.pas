@@ -1,8 +1,13 @@
 unit Struct_Dynamic;
 
+{ A unit containing a description of the main
+ data structures and routines for working with
+ these data structures }
+
 interface
 
 type
+  { Type unidirectional list containing natural numbers }
   TPItem = ^Titem;
   TItem = record
     Number: Integer;
@@ -10,34 +15,52 @@ type
   end;
 
   TStack = TPItem;
+  //Type stack
 
+  { Type Queue }
   TQueue = record
     Head: TPItem;
     Tail: TPItem;
   end;
 
   procedure Stack_Initialize(var AStack: TStack);
+  //Stack initialization procedure
+
   procedure Queue_Initialize(var AQueue: TQueue);
+  //Queue initialization procedure
+
   procedure List_Destroy(var AHead: TPItem);
+  //Queue destroy procedure
+
   procedure Stack_Push(var AStack: TStack; n: Integer);
+  //Procedure for placing a value on the stack
+
   procedure Queue_Add(var AQueue: TQueue; n: Integer);
+  //The procedure for placing a value in a queue
+
   function Stack_Pop(var AStack: TStack): Integer;
+  //The function of extracting an element from the stack
+
   function Queue_Extract(var AQueue: TQueue): Integer;
+  //The function of extracting an element from the queue
 
 implementation
 
   procedure Stack_Initialize(var AStack: TStack);
+  { Stack initialize }
   begin
     AStack := Nil;
   end;
 
   procedure Queue_Initialize(var AQueue: TQueue);
+  { Queue initialize }
   begin
     AQueue.Head := nil;
     AQueue.Tail := nil;
   end;
 
   procedure List_Destroy(var AHead: TPItem);
+  { List destroy }
   var
     Item: TPItem;
 
@@ -51,6 +74,7 @@ implementation
   end;
 
   procedure Stack_Push(var AStack: TStack; n: Integer);
+  { placing a value on the stack }
   var
     Item: TPitem;
 
@@ -62,6 +86,7 @@ implementation
   end;
 
   procedure Queue_Add(var AQueue: TQueue; n: Integer);
+  { placing a value on the queue }
   var
     Item: TPItem;
 
@@ -79,6 +104,7 @@ implementation
   end;
 
   function Stack_Pop(var AStack: TStack): Integer;
+  { function of extracting an element from the stack }
   var
     Item: TPitem;
 
@@ -96,6 +122,7 @@ implementation
   end;
 
   function Queue_Extract(var AQueue: TQueue): Integer;
+  { function of extracting an element from the queue }
   var
     Item: TPItem;
 

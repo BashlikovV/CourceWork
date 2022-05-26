@@ -1,5 +1,8 @@
 unit Window_ArcInput;
 
+{ A form that provides the user with the ability
+  to enter the weight of the arc }
+
 interface
 
 uses
@@ -13,11 +16,9 @@ type
     btnCancel: TButton;
     pnlTopPanel: TPanel;
     lbledtWeight: TLabeledEdit;
-    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure btnOkMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure btnOkKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnOkClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,17 +33,14 @@ implementation
 
 {$R *.dfm}
 
-procedure TWindow_Input.btnOkKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-const
-  Enter = 13;
+procedure TWindow_Input.btnCancelClick(Sender: TObject);
+{ Skip changes }
 begin
-  if (Key = Enter) then
-    Window_Input.DoExit;
+  ModalResult := mrCancel;
 end;
 
-procedure TWindow_Input.btnOkMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TWindow_Input.btnOkClick(Sender: TObject);
+{ Share changes }
 var
   Error: Integer;
 
@@ -53,16 +51,15 @@ begin
   lbledtWeight.Text := '';
   if (Sender = btnOk) then Close;
 
-end;
-
-procedure TWindow_Input.FormCreate(Sender: TObject);
-begin
-  Weight := 1;
+  ModalResult := mrOk;
 end;
 
 procedure TWindow_Input.FormShow(Sender: TObject);
+{ initializing values }
 begin
   lbledtWeight.SetFocus;
+  Weight := 1;
+  lbledtWeight.Text := '';
 end;
 
 end.

@@ -1,10 +1,14 @@
 unit Window_SrchOutput;
 
+{ A form displaying the results of the performed algorithms }
+
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Algorithms, Vcl.ComCtrls;
+  Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  Vcl.ExtCtrls, Graph_Algorithms, Vcl.ComCtrls;
 
 type
   TfrmSrchOutput = class(TForm)
@@ -34,11 +38,13 @@ implementation
 { TForm1 }
 
 procedure TfrmSrchOutput.FormClose(Sender: TObject; var Action: TCloseAction);
+{ Zeroing values }
 begin
   FProgressBar.Position := 0;
 end;
 
 procedure TfrmSrchOutput.FormShow(Sender: TObject; APrBar: TProgressBar);
+{ Showing the result }
 const
   NL = #10#13;
 
@@ -62,11 +68,13 @@ begin
 end;
 
 procedure TfrmSrchOutput.SetClose(const Value: Boolean);
+{ Return Info about closing form }
 begin
   FClose := Value;
 end;
 
 procedure TfrmSrchOutput.SetPBar(AClose: Boolean; AProgressBar: TProgressBar);
+{ Zeroing progress bar position }
 begin
   AClose := isClose;
   if (AClose) then AProgressBar.Position := 0;
