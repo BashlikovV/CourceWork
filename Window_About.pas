@@ -1,9 +1,13 @@
 unit Window_About;
 
+{ The company that provides the user with basic
+ information about the program }
+
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
 
 type
@@ -24,6 +28,7 @@ implementation
 {$R *.dfm}
 
 procedure TfrmAbout.FormCreate(Sender: TObject);
+{ Copletion form using file }
 const
   FileName = 'README.txt';
   NL = #13#10;

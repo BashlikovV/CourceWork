@@ -1,5 +1,7 @@
   unit Window_Main;
 
+  { the main form designed to ensure user interaction with the program }
+
   interface
 
   uses
@@ -7,12 +9,13 @@
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
     Vcl.ActnMan, Vcl.ActnCtrls, System.Actions, Vcl.ActnList, System.ImageList,
     Vcl.ImgList, Vcl.ExtCtrls, Graph_Edit, Graph_Drawing, Window_ArcInput,
-    Vcl.StdCtrls, Vcl.Buttons, Algorithms, Window_SrchOutput, Vcl.WinXCtrls, Window_About,
+    Vcl.StdCtrls, Vcl.Buttons, Graph_Algorithms, Window_SrchOutput, Vcl.WinXCtrls, Window_About,
     Vcl.ActnColorMaps;
 
   type
     TCanvasState = (stAddVertice, stAddArc, stDeleteVertice, stDeleteArc, stMove,
                     stDFS, stBFS, stDijkstra, stNone, stUndo, stRedo, stTrace);
+    //TCanvasState - The type that determines the condition of the canvas
 
     TMainForm = class(TForm)
       ActionList: TActionList;
@@ -155,6 +158,7 @@
   end;
 
   procedure TMainForm.actDijkstraExecute(Sender: TObject);
+  { Changing the state of the canvas }
   begin
     FState := stDijkstra;
   end;
@@ -189,11 +193,13 @@
   end;
 
   procedure TMainForm.actInHeightExecute(Sender: TObject);
+  { Changing the state of the canvas }
   begin
     FState := stDFS;
   end;
 
   procedure TMainForm.actInWidthExecute(Sender: TObject);
+  { Changing the state of the canvas }
   begin
     FState := stBFS;
   end;
@@ -211,12 +217,12 @@
     //Choosing the vertice file
     MessageBox(MainForm.Handle, 'ֲûבונטעו פאיכ גונרטם (*.ver)', 'VerFileName', MB_OK);
     dlgOpen.Execute();
-    VerFileName := ExtractFileName(dlgOpen.FileName);
+    VerFileName := dlgOpen.FileName;
 
     //Choosing the arc file
     MessageBox(MainForm.Handle, 'ֲûבונטעו פאיכ נובונ (*.arc)', 'ArcFileName', MB_OK);
     dlgOpen.Execute();
-    ArcFileName := ExtractFileName(dlgOpen.FileName);
+    ArcFileName := dlgOpen.FileName;
 
     try
       Graph_Open(NewGraph, VerFileName, ArcFileName);
@@ -253,7 +259,7 @@
 
   begin
     dlgSave.Execute();
-    VerFileName := dlgSave.FileName + '.Vert';
+    VerFileName := dlgSave.FileName + '.Ver';
     ArcFileName := VerFileName + '.Arc';
     Graph_Save(FGraph, VerFileName, ArcFileName);
   end;
@@ -300,6 +306,7 @@
   end;
 
   procedure TMainForm.btnStepOverClick(Sender: TObject);
+  { Changing the state of the canvas }
   begin
     FState := stTrace;
   end;
@@ -322,7 +329,7 @@
   var
     Pos: TPoint;
     SelectedVertice: TPVertice;
-    Window_MInput: TModalResult;
+    WRes: TModalResult;
     //Pos -- Cursor position (X, Y) during click
     //SelectedVertice -- Pointer to the selected vertex
     //Window_MInput -- Edge length input window
@@ -393,17 +400,17 @@
                 if (FGraphType) then
                 { Weighted graph }
                 begin
-                  Window_MInput := Window_Input.ShowModal;
-                  Window_MInput := mrOk;
+                  WRes := Window_Input.ShowModal;
+                  WRes := mrOk;
                 end
                 else
                 { unweighted graph. Weights of edges := 1 }
                 begin
                   Window_Input.Weight := 1;
-                  Window_MInput := mrOk;
+                  WRes := mrOk;
                 end;
 
-                if (Window_MInput = mrOk) then
+                if (WRes = mrOk) then
                   Graph_AddEdge(FGraph, FActiveVertice.Number,
                     SelectedVertice.Number, Window_Input.Weight);
                 //Adding edge
@@ -525,7 +532,7 @@
       stDijkstra:
       { Dijkstra }
         begin
-          AInfo := Graph_Dijkstra(Weights, v, u, pbProgressBar, isTrace);
+          AInfo := Graph_Dijkstra(Weights, v, u, pbProgressBar);
         end;
 
       stDFS:
